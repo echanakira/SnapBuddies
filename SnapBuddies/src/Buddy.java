@@ -8,6 +8,7 @@ public class Buddy {
 	private ArrayList<Buddy> currBuds;
 	private ArrayList<Buddy> totalPrev;
 	private ArrayList<Buddy> buddiesLeft;
+	private int buddyCount;
 
 	/**
 	 *  A buddy is an individual
@@ -19,12 +20,13 @@ public class Buddy {
 	 */
 	public Buddy(String name, ArrayList<Buddy> previousBuds, 
 			ArrayList<Buddy> currBuds, ArrayList<Buddy> totalPrevious, 
-			ArrayList<Buddy> buddiesLeft) {
+			ArrayList<Buddy> buddiesLeft, int buddyCount) {
 		name = this.name;
 		previousBuds = this.prevBuds;
 		currBuds = this.currBuds;
 		totalPrevious = this.totalPrev;
 		buddiesLeft = this.buddiesLeft;
+		buddyCount = this.buddyCount;
 	}
 	
 	/* Adds new buddy to the list of remaining buddies */
