@@ -30,18 +30,21 @@ public class Buddy {
 		
 	}
 	
-	/* Adds new buddy to the list of remaining buddies */
-	public boolean addBuddy(Buddy bud) {
-		if( buddiesLeft.contains(bud)) {
+	/* Adds new buddy to the list of remaining buddies  */
+	public boolean add() {
+		if(buddiesLeft.contains(this)) {
 			return false;
 		}else {
-			return buddiesLeft.add(bud);
+			return buddiesLeft.add(this);
 		}
 	}
 	
-	public boolean moveTo(Buddy bud, ArrayList<Buddy> dest) {
-		if(!dest.contains(bud)) {
-			return dest.add(bud);
+	/** Moves a Buddy to a separate list of Buddies
+	 * @param dest				List Buddy is moving to
+	 */
+	public boolean moveTo( ArrayList<Buddy> dest) {
+		if(!dest.contains(this)) {
+			return dest.add(this);
 		}else {
 			return false;
 		}
