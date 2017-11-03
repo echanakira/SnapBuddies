@@ -27,6 +27,7 @@ public class Buddy {
 		totalPrevious = this.totalPrev;
 		buddiesLeft = this.buddiesLeft;
 		buddyCount = this.buddyCount;
+		
 	}
 	
 	/* Adds new buddy to the list of remaining buddies */
