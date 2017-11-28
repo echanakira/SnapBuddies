@@ -8,7 +8,7 @@ public class Buddy {
 	private ArrayList<Buddy> currBuds = new ArrayList<Buddy>();
 	private ArrayList<Buddy> totalPrev = new ArrayList<Buddy>();
 	private ArrayList<Buddy> buddiesLeft = new ArrayList<Buddy>();
-	private int pairableCount;
+	private int pairableCount = 4;
 
 	/**
 	 *  A buddy is an individual
@@ -27,7 +27,7 @@ public class Buddy {
 		this.currBuds = currBuds;
 		this.totalPrev = totalPrevious;
 		this.buddiesLeft = buddiesLeft;
-		this.pairableCount= buddyCount;
+		this.pairableCount = buddyCount;
 		
 	}
 	
