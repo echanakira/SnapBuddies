@@ -4,10 +4,10 @@ import java.util.*;
 public class Buddy {
 	
 	private String name;
-	private ArrayList<Buddy> prevBuds;
-	private ArrayList<Buddy> currBuds;
-	private ArrayList<Buddy> totalPrev;
-	private ArrayList<Buddy> buddiesLeft;
+	private ArrayList<Buddy> prevBuds = new ArrayList<Buddy>();
+	private ArrayList<Buddy> currBuds = new ArrayList<Buddy>();
+	private ArrayList<Buddy> totalPrev = new ArrayList<Buddy>();
+	private ArrayList<Buddy> buddiesLeft = new ArrayList<Buddy>();
 	private int buddyCount;
 
 	/**
@@ -31,6 +31,14 @@ public class Buddy {
 		
 	}
 	
+	public Buddy(String name) {
+		this.name = name;
+		this.buddyCount = 0;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
 	
 	/* Retrieves previous buddies */
 	public ArrayList<Buddy> getPrevBuds() {
@@ -83,15 +91,5 @@ public class Buddy {
 	}
 	
 	
-	public static void main(String[] args) throws IOException  {
-		String line;
-		PrintStream stdout = System.out;
-		Scanner scan = new Scanner(new File("C:\\Users\\Elijah\\eclipse-workspace\\SnapBuddies\\src\\buddies.txt"));
-		System.setOut(new PrintStream("C:\\Users\\Elijah\\eclipse-workspace\\SnapBuddies\\src\\output.txt"));
-		do {
-		line = scan.nextLine();
-		System.out.println(line);
-		}while(scan.hasNextLine());
-		System.setOut(stdout);
-	}
+	
 }
