@@ -8,7 +8,7 @@ public class Buddy {
 	private ArrayList<Buddy> currBuds = new ArrayList<Buddy>();
 	private ArrayList<Buddy> totalPrev = new ArrayList<Buddy>();
 	private ArrayList<Buddy> buddiesLeft = new ArrayList<Buddy>();
-	private int buddyCount;
+	private int pairableCount;
 
 	/**
 	 *  A buddy is an individual
@@ -17,23 +17,23 @@ public class Buddy {
 	 *  @param currBuds			Current list of buddies
 	 *  @param totalPrev		List of total past buddies
 	 *  @param budsLeft 		List of total buddies remaining
-	 *  @param buddyCoutn		Number of buddies current object can be paired with
+	 *  @param buddyCount		Number of buddies current object can be paired with
 	 */
 	public Buddy(String name, ArrayList<Buddy> previousBuds, 
 			ArrayList<Buddy> currBuds, ArrayList<Buddy> totalPrevious, 
 			ArrayList<Buddy> buddiesLeft, int buddyCount) {
-		name = this.name;
-		previousBuds = this.prevBuds;
-		currBuds = this.currBuds;
-		totalPrevious = this.totalPrev;
-		buddiesLeft = this.buddiesLeft;
-		buddyCount = this.buddyCount;
+		this.name = name;
+		this.prevBuds = previousBuds;
+		this.currBuds = currBuds;
+		this.totalPrev = totalPrevious;
+		this.buddiesLeft = buddiesLeft;
+		this.pairableCount= buddyCount;
 		
 	}
 	
 	public Buddy(String name) {
 		this.name = name;
-		this.buddyCount = 0;
+		this.pairableCount = 0;
 	}
 	
 	public String getName() {
@@ -60,22 +60,25 @@ public class Buddy {
 		this.buddiesLeft.removeAll(currBuddies);
 	}
 	
-	public int getBuddyCount() {
-		return buddyCount;
+	public int getPairableCount() {
+		return pairableCount;
 	}
 
 	/* Updates buddy count */
 	public void updateBuddy(int buddyCount) {
-		this.buddyCount += buddyCount;
+		this.pairableCount += buddyCount;
 	}
 
 	
-	/* Adds new buddy to the list of remaining buddies  */
-	public boolean add() {
-		if(buddiesLeft.contains(this)) {
+	/* Adds new buddy to the list of current buddies  */
+	public boolean add(Buddy b) {
+		if(buddiesLeft.contains(b)) {
 			return false;
 		}else {
-			return buddiesLeft.add(this);
+			currBuds.add(b);
+			buddiesLeft.remove(b);
+			this.pairableCount--;
+			return true;
 		}
 	}
 	
