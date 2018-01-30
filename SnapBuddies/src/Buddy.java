@@ -1,12 +1,13 @@
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+
 
 public class Buddy {
-	
+
 	private String name;
-	private ArrayList<Buddy> prevBuds = new ArrayList<Buddy>();
+	private HashMap<Buddy, Boolean> prevBuds = new ArrayList<Buddy>();
 	private ArrayList<Buddy> currBuds = new ArrayList<Buddy>();
-	private ArrayList<Buddy> totalPrev = new ArrayList<Buddy>();
+	private HashMap<Buddy, Boolean> totalPrev = new ArrayList<Buddy>();
 	private ArrayList<Buddy> buddiesLeft = new ArrayList<Buddy>();
 	private int buddyCount;
 
@@ -19,8 +20,8 @@ public class Buddy {
 	 *  @param budsLeft 		List of total buddies remaining
 	 *  @param buddyCoutn		Number of buddies current object can be paired with
 	 */
-	public Buddy(String name, ArrayList<Buddy> previousBuds, 
-			ArrayList<Buddy> currBuds, ArrayList<Buddy> totalPrevious, 
+	public Buddy(String name, HashMap<Buddy, Boolean> previousBuds,
+			ArrayList<Buddy> currBuds, HashMap<Buddy, Boolean> totalPrevious,
 			ArrayList<Buddy> buddiesLeft, int buddyCount) {
 		name = this.name;
 		previousBuds = this.prevBuds;
@@ -28,26 +29,21 @@ public class Buddy {
 		totalPrevious = this.totalPrev;
 		buddiesLeft = this.buddiesLeft;
 		buddyCount = this.buddyCount;
-		
+
 	}
-	
+
 	public Buddy(String name) {
 		this.name = name;
-		this.buddyCount = 0;
+		this.buddyCount = 4;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
-	/* Retrieves previous buddies */
-	public ArrayList<Buddy> getPrevBuds() {
-		return prevBuds;
-	}
 
-	/* Adds all of the current buddies to previous buddies */
-	public void setPrevBuds(ArrayList<Buddy> currBuds) {
-		this.prevBuds.addAll(currBuds);
+	/* Retrieves previous buddies */
+	public HashMap<Buddy, Boolean> getPrevBuds() {
+		return prevBuds;
 	}
 
 	/* Retrieves the buddies remaining */
@@ -55,11 +51,22 @@ public class Buddy {
 		return buddiesLeft;
 	}
 
+	public ArrayList<Buddy> totalPrev;
+
+	/* Adds all of the current buddies to previous buddies */
+	//UPDATE
+	public void setPrevBuds(HashMap<Buddy, Boolean> currBuds) {
+		//this.prevBuds.addAll(currBuds);
+		throw new ImplementMethodException("This method needs to be implemented.");
+	}
+
+
 	/* Removes current buddies from the buddies remaining */
 	public void setBuddiesLeft(ArrayList<Buddy> currBuddies) {
-		this.buddiesLeft.removeAll(currBuddies);
+		//this.buddiesLeft.removeAll(currBuddies);
+		throw new ImplementMethodException("This method needs to be implemented.");
 	}
-	
+
 	public int getBuddyCount() {
 		return buddyCount;
 	}
@@ -69,27 +76,44 @@ public class Buddy {
 		this.buddyCount += buddyCount;
 	}
 
-	
+
+
 	/* Adds new buddy to the list of remaining buddies  */
-	public boolean add() {
-		if(buddiesLeft.contains(this)) {
+	public boolean addToRemaining() {
+		if(buddiesLeft.containsKey(this)) {
 			return false;
 		}else {
-			return buddiesLeft.add(this);
+			return buddiesLeft.put(this, true);
 		}
 	}
-	
+
 	/** Moves a Buddy to a separate list of Buddies
 	 * @param dest				List Buddy is moving to
 	 */
-	public boolean moveTo( ArrayList<Buddy> dest) {
-		if(!dest.contains(this)) {
-			return dest.add(this);
+	public boolean moveTo( HashMap<Buddy, Boolean> dest) {
+		if(!dest.containsKey(this)) {
+			dest.put(this, true);
+			return true;
 		}else {
 			return false;
 		}
 	}
-	
-	
-	
+
+	/**
+	 * Create method that matches matches two buddies.
+	 * When to buddies match, their buddycount is decremented and
+	 * They remove one another from buddiesLeft, add each other to currentBuddies.
+	 */
+	 //UPDATE: Before a new set of buddies is added clear current buddies and add to prev
+	 public boolean match(Buddy bud){
+		 throw new ImplementMethodException("This method needs to be implemented.");
+		 buddiesLeft.remove(bud);
+		 bud.buddiesLeft.remove(this);
+		 currentBuddies.add(bud);
+		 bud.currentBuddies.add(this);
+		 buddyCount--;
+		 bud.buddyCount--;
+		 return true;
+	 }
+
 }
