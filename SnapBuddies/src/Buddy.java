@@ -8,7 +8,10 @@ public class Buddy {
 	private ArrayList<Buddy> currBuds;
 	//private ArrayList<Buddy> totalPrev = new ArrayList<Buddy>();
 	private ArrayList<Buddy> buddiesLeft;
-	private int pairableCount = 4;
+	private ArrayList<Buddy> pledgesLeft;
+	private int pairableCount;
+	private String status;
+	private int pledgeCount;
 
 	/**
 	 *  A buddy is an individual
@@ -31,17 +34,33 @@ public class Buddy {
 		
 	}*/
 	
-	public Buddy(String name) {
+	public Buddy(String name, String status ) {
 		this.name = name;
+		this.status = status;
+		if(status.equals("Pledge")) {
+			pledgesLeft = new ArrayList<Buddy>();
+			this.pledgeCount = 2;
+		}
+		this.pairableCount = 6;
 		this.currBuds = new ArrayList<Buddy>();
 		this.buddiesLeft = new ArrayList<Buddy>();
-		this.pairableCount = 2;
 	}
 	
 	public String getName() {
 		return this.name;
 	}
 	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	public int getPairableCount() {
+		return pairableCount;
+	}
+	
+	public int getPledgeCount() {
+		return pledgeCount;
+	}
 	/* Retrieves previous buddies */
 	/*public ArrayList<Buddy> getPrevBuds() {
 		return prevBuds;
@@ -64,19 +83,28 @@ public class Buddy {
 	public ArrayList<Buddy> getBuddiesLeft() {
 		return buddiesLeft;
 	}
+	
+	public ArrayList<Buddy> getPledgesLeft() {
+		return pledgesLeft;
+	}
 
 	/* Removes current buddies from the buddies remaining */
-	public void setBuddiesLeft(ArrayList<Buddy> currBuddies) {
-		this.buddiesLeft.removeAll(currBuddies);
+	public void shuffleBuddiesLeft() {
+		Collections.shuffle(buddiesLeft);
 	}
 	
-	public int getPairableCount() {
-		return pairableCount;
+	public void shufflePledgesLeft() {
+		Collections.shuffle(pledgesLeft);
 	}
 	
 	public void addToBuddiesLeft(Buddy b) {
 		this.buddiesLeft.add(b);
 	}
+	
+	public void addToPledgesLeft(Buddy b) {
+		this.pledgesLeft.add(b);
+	}
+
 
 	/* Updates buddy count */
 	public void updateBuddy(int buddyCount) {
@@ -87,6 +115,16 @@ public class Buddy {
 	/* Adds new buddy to the list of current buddies  */
 	public boolean add(Buddy b) {
 		if(buddiesLeft.contains(b)) {
+			if(this.status.equals("Pledge") && b.getStatus().equals("Pledge")) {
+				 if(pledgeCount != 0) {
+					 pledgesLeft.remove(b);
+					 pledgeCount--;
+					 currBuds.add(b);
+					 buddiesLeft.remove(b);
+					this.pairableCount--;
+					return true;
+				 }
+			}
 			currBuds.add(b);
 			buddiesLeft.remove(b);
 			this.pairableCount--;
@@ -107,6 +145,15 @@ public class Buddy {
 		}
 	}
 	
+	
+	public String toString() {
+		if(status.equals("Pledge")) {
+			return this.name + ": count = " + this.pairableCount + "| pledgeCount = " + this.pledgeCount;
+		}else {
+			return this.name + ": count = " + this.pairableCount;
+
+		}
+	}
 	
 	
 }

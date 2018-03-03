@@ -18,8 +18,8 @@ class NetworkTests {
 	
 	@Test
 	void testPair() throws FileNotFoundException {
-		Buddy b1 = new Buddy("Bud1");
-		Buddy b2 = new Buddy("Bud2");
+		Buddy b1 = new Buddy("Bud1", "Brother");
+		Buddy b2 = new Buddy("Bud2", "Pledge");
 		n.init(path);
 		System.setOut(System.out);
 		

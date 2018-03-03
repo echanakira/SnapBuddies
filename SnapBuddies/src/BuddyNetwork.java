@@ -9,7 +9,10 @@ public class BuddyNetwork {
 	private int week;
 	private Random randomGenerator;
 	private ArrayList<Buddy> network;
+	private ArrayList<Buddy> pNetwork;
 	private ArrayList<Buddy> unmatched; 
+	private ArrayList<Buddy> pUnmatched; 
+
 
 	/*
 	 * @param current week of buddies
@@ -19,6 +22,8 @@ public class BuddyNetwork {
 		randomGenerator = new Random();
 		network =  new ArrayList<Buddy>();
 		unmatched = new ArrayList<Buddy>();
+		pNetwork = new ArrayList<Buddy>();
+		pUnmatched = new ArrayList<Buddy>();
 	}
 
 	/* Init sets file to stdin and then parses the file. 
@@ -27,36 +32,40 @@ public class BuddyNetwork {
 	 */
 	public boolean init(File filePath) throws FileNotFoundException {
 		String line;
-		PrintStream stdout = System.out;
+		String[] arr;
 		Scanner scan = new Scanner(filePath);							//Sets stdin to file
-		System.setOut(new PrintStream(
-				"C:\\Users\\Elijah\\git\\SnapBuddies\\SnapBuddies\\src\\output.txt"));		//Sets stdout to output.txt file
+		
 
 		/* Read from stdin and then add the buddy to the network*/
 		do {
-			line = scan.nextLine();				
-			Buddy newBud = new Buddy(line);
+			line = scan.nextLine();	
+			arr = line.split("\t");
+			Buddy newBud = new Buddy(arr[0].concat(" ").concat(arr[1]), arr[2]);
 			if(this.containsBuddy(newBud)) {
-				updateAll(newBud);
-				for(Buddy b : network) {
+				updateAll(newBud);					//Adds the new buddy to the list of matchable buddies
+				for(Buddy b : network) {			//Adds all the remaining buddies to newBud's buddiesLeft
 					if(newBud != b) {
 						newBud.addToBuddiesLeft(b);
 					}
+				}
+				if( arr[2].equals("Pledge")) {			//Adds the newBud to the pledge network
+					pNetwork.add(newBud);
+					pUnmatched.add(newBud);
 				}
 				network.add(newBud);
 				unmatched.add(newBud);
 			}
 		} while (scan.hasNextLine());
-		
-		/*for(Buddy b: network) {
-			System.out.println(b.getName());
-		}*/
-		System.setOut(stdout);											//clear output.txt
 		return true;
 	}
 	
 	public void updateAll(Buddy bud) {
-		for(Buddy b : network) {
+		if(bud.getStatus().equals("Pledge")) {
+			for(Buddy pledge : pUnmatched) {
+				pledge.addToPledgesLeft(bud);
+			}
+		}
+		for(Buddy b : unmatched) {
 			b.addToBuddiesLeft(bud);
 		}
 	}
@@ -64,13 +73,34 @@ public class BuddyNetwork {
 	/* Pairs all buddies within the network */
 	public boolean pairAll() {
 		for(Buddy bud1 : network) {
+			int index = 0;
+			bud1.shuffleBuddiesLeft();
 			if(unmatched.size() == 0) {
 				break;
 			}
-			while(bud1.getPairableCount() != 0) {
-				int index = randomGenerator.nextInt(bud1.getBuddiesLeft().size());
-				Buddy bud2 = find(bud1.getBuddiesLeft().get(index));
-				this.pair(bud1, bud2);
+			while(bud1.getPairableCount() != 0 && index < bud1.getBuddiesLeft().size()) {
+				Buddy bud2 = findBuddy(bud1.getBuddiesLeft().get(index));
+				if(!this.pair(bud1, bud2)) {
+					index++;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean pairPledges(){
+		for(Buddy pledge1 : pNetwork) {
+			int index = 0;
+			pledge1.shufflePledgesLeft();
+			if(pUnmatched.size() <=1) {
+				break;
+			}else {
+				while(pledge1.getPledgeCount() != 0) {
+					Buddy pledge2 = findPledge(pledge1.getPledgesLeft().get(index));
+					if(!this.pair(pledge1, pledge2)) {
+						index++;
+					}
+				}
 			}
 		}
 		return true;
@@ -85,11 +115,24 @@ public class BuddyNetwork {
 			if(bud1.getPairableCount() != 0 && bud2.getPairableCount() != 0) {
 				bud1.add(bud2);
 				bud2.add(bud1);
-				if(bud1.getPairableCount() == 0) {
-					unmatched.remove(bud1);
-				}
-				if(bud2.getPairableCount() == 0) {
-					unmatched.remove(bud2);
+				if(bud1.getStatus().equals("Pledge") && bud2.getStatus().equals("Pledge")) {
+					if(bud2.getPledgeCount() ==0) {
+						if(!pUnmatched.remove(bud2) && bud2.getPairableCount() == 0) {
+							unmatched.remove(bud2);
+						}
+					}
+					if(bud1.getPledgeCount() ==0) {
+						if(!pUnmatched.remove(bud1) && bud1.getPairableCount() ==0) {
+							unmatched.remove(bud1);
+						}
+					}
+				}else {
+					if(bud1.getPairableCount() == 0) {
+						unmatched.remove(bud1);
+					}
+					if(bud2.getPairableCount() == 0) {
+						unmatched.remove(bud2);
+					}
 				}
 				return true;
 			}
@@ -97,9 +140,14 @@ public class BuddyNetwork {
 		return false;
 	}
 	
-	public Buddy find(Buddy b) {
+	public Buddy findBuddy(Buddy b) {
 		int index = network.indexOf(b);
 		return network.get(index);
+	}
+	
+	public Buddy findPledge(Buddy b) {
+		int index = pNetwork.indexOf(b);
+		return pNetwork.get(index);
 	}
 	
 	
