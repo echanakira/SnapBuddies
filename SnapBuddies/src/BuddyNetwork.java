@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class BuddyNetwork {
 
-	private int week;
-	private Random randomGenerator;
 	private ArrayList<Buddy> network;
 	private ArrayList<Buddy> pNetwork;
 	private ArrayList<Buddy> unmatched; 
@@ -18,8 +16,6 @@ public class BuddyNetwork {
 	 * @param current week of buddies
 	 */
 	public BuddyNetwork(int week) {
-		this.week = week;
-		randomGenerator = new Random();
 		network =  new ArrayList<Buddy>();
 		unmatched = new ArrayList<Buddy>();
 		pNetwork = new ArrayList<Buddy>();
