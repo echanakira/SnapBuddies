@@ -9,6 +9,7 @@ public class Buddy {
 	//private ArrayList<Buddy> totalPrev = new ArrayList<Buddy>();
 	private ArrayList<Buddy> buddiesLeft;
 	private ArrayList<Buddy> pledgesLeft;
+	private ArrayList<Buddy> allPreviousBuds;
 	private int pairableCount;
 	private String status;
 	private int pledgeCount;
@@ -44,6 +45,7 @@ public class Buddy {
 		this.pairableCount = 6;
 		this.currBuds = new ArrayList<Buddy>();
 		this.buddiesLeft = new ArrayList<Buddy>();
+		this.allPreviousBuds = new ArrayList<Buddy>();
 	}
 	
 	public String getName() {
@@ -67,12 +69,20 @@ public class Buddy {
 	}*/
 
 	/* Retrieves previous buddies */
-	public void getCurrentBuds() {
+	public void printBuds() {
 		for(Buddy b : currBuds) {
-			System.out.print(" " + b.getName() + "| \t");
+			System.out.print(b.getName() + "\t");
 		}
 	}
+	
+	public ArrayList<Buddy> getCurrBuds() {
+		return currBuds;
+	}
+	
 
+	public ArrayList<Buddy> getAllPreviousBuds() {
+		return allPreviousBuds;
+	}
 	
 	/* Adds all of the current buddies to previous buddies */
 	/*public void setPrevBuds(ArrayList<Buddy> currBuds) {
@@ -88,6 +98,19 @@ public class Buddy {
 		return pledgesLeft;
 	}
 
+	public Boolean removeBud(int index) {
+		if(buddiesLeft.remove(index) != null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public Boolean updatePairCount(int val) {
+		pairableCount += val;
+		return true;
+	}
+	
 	/* Removes current buddies from the buddies remaining */
 	public void shuffleBuddiesLeft() {
 		Collections.shuffle(buddiesLeft);
@@ -103,6 +126,10 @@ public class Buddy {
 	
 	public void addToPledgesLeft(Buddy b) {
 		this.pledgesLeft.add(b);
+	}
+	
+	public void addToAllPreviousBuds(Buddy b) {
+		this.allPreviousBuds.add(b);
 	}
 
 
