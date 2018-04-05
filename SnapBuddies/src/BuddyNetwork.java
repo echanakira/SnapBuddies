@@ -74,6 +74,9 @@ public class BuddyNetwork {
 			if(unmatched.size() == 0) {
 				break;
 			}
+			if(bud1.getStatus() == "Pledge") {
+				findBuddy(bud1);
+			}
 			while(bud1.getPairableCount() != 0 && index < bud1.getBuddiesLeft().size()) {
 				Buddy bud2 = findBuddy(bud1.getBuddiesLeft().get(index));
 				if(!this.pair(bud1, bud2)) {
@@ -107,7 +110,7 @@ public class BuddyNetwork {
 	 * @param bud2		second buddy being paired
 	 */
 	public boolean pair(Buddy bud1, Buddy bud2) {
-		if(bud1.getBuddiesLeft().contains(bud2)) {
+		if(bud1.getBuddiesLeft().contains(bud2) && !bud1.getAllPreviousBuds().contains(bud2)) {
 			if(bud1.getPairableCount() != 0 && bud2.getPairableCount() != 0) {
 				bud1.add(bud2);
 				bud2.add(bud1);
@@ -143,53 +146,110 @@ public class BuddyNetwork {
 		Scanner scan = new Scanner(filePath);							//Sets stdin to file
 		
 
-		/* Read from stdin and then add the buddy to the network*/
+		/* Add all to network*/
 		do {
 			line = scan.nextLine();	
 			arr = line.split("\t");
+			arr[0] = arr[0].substring(0,arr[0].indexOf("-"));
 			Buddy bud = new Buddy(arr[0], "Brother");
-			for( Buddy b : network) {
-				bud.addToBuddiesLeft(b);
-			}
-			network.add(bud);
-			unmatched.add(bud);
+			addToNetwork(bud);
 			lineNum++;
-		}while (lineNum != 59);
+		}while (lineNum != 57);
 		
 		do {
 			line = scan.nextLine();	
 			arr = line.split("\t");
+			arr[0] = arr[0].substring(0,arr[0].indexOf("-"));
 			Buddy bud = new Buddy(arr[0], "Pledge"); 
-			for( Buddy b : network) {
-				bud.addToBuddiesLeft(b);
-			}
-			network.add(bud);
-			pNetwork.add(bud);
-			unmatched.add(bud);
+			addToNetwork(bud);
 			lineNum++;
-		}while (lineNum != 82);
+		}while (lineNum != 83);
+			Buddy maggie = new Buddy("Maggie McGuckin", "Pledge");
+			addToNetwork(maggie);
 		
-		Scanner scan2 = new Scanner(filePath);	
-		for(Buddy b: network) {
-			line = scan.nextLine();
+		
+		/* Add to previous */
+		Scanner scan2 = new Scanner(filePath);							//Sets stdin to file
+		lineNum = 1;
+		do {
+			line = scan2.nextLine();	
 			arr = line.split("\t");
-			if(b.getStatus() == "Pledge") {
-				for(int i = 0; i < 6; i++) {
-					//find buddy using name
-					//if buddy is a pledge and i > 2 then updateNetwork
-					//otherwise pair the two permanent pledges
-					//update pledge paircount
+			arr[0] = arr[0].substring(0,arr[0].indexOf("-"));
+			Buddy bud = findBuddy(arr[0]);
+			savePrev(bud, arr);
+			for(Buddy b : network) {
+				if(!bud.getAllPreviousBuds().contains(bud)) {
+					if(bud.getName() != b.getName()) {
+						bud.addToBuddiesLeft(b);
+					}				
 				}
-				unmatched.add(b);
-			}else {
-				//find buddy
-				//add the buddy to bud's allPreviousBuddies
 			}
-			unmatched.add(b);
-		}
+			lineNum++;
+		}while (lineNum != 57);
 		
+		do {
+			line = scan2.nextLine();	
+			arr = line.split("\t");
+			arr[0] = arr[0].substring(0,arr[0].indexOf("-"));
+			Buddy bud = findBuddy(arr[0]);
+			savePrev(bud, arr);
+			for(Buddy b : network) {
+				if(!bud.getAllPreviousBuds().contains(bud)) {
+					if(bud.getName() != b.getName()) {
+						bud.addToBuddiesLeft(b);
+					}
+				}
+			}
+			lineNum++;
+		}while (lineNum != 83);
+		savePrev(maggie, null);
+		for(Buddy b : network) {
+			if(!maggie.getAllPreviousBuds().contains(b)) {
+				if(maggie.getName() != b.getName()) {
+					maggie.addToBuddiesLeft(b);
+				}
+			}
+		}
 		return true;
 	}
+	
+	
+	
+	public boolean addToNetwork(Buddy bud) {
+			if(bud.getStatus() == "Brother") {
+				network.add(bud);
+				unmatched.add(bud);
+			}else {
+				unmatched.add(bud);
+				network.add(bud);
+			}
+			return true;
+	}
+	
+	public Buddy findBuddy(String name) {
+		for( Buddy b : network) {
+			if(b.getName().equals(name)) {
+				return b;
+			}
+		}
+		return null;
+	}
+	
+	public Boolean savePrev(Buddy bud, String[] arr) {
+		if(arr != null) {
+		if(bud.getStatus() == "Brother") {
+			for(int i = 1; i < 6; i++) {
+				bud.addToAllPreviousBuds(findBuddy(arr[i]));
+			}
+		}else {
+			for(int i = 2; i < 6; i++) {
+				bud.addToAllPreviousBuds(findBuddy(arr[i]));
+			}
+		}
+		}
+		return true;
+	}
+	
 	
 	public Boolean updateNetwork(Buddy main, Buddy side) {
 		main.addToAllPreviousBuds(side);

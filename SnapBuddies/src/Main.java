@@ -46,9 +46,9 @@ public class Main {
 			printAllPairs(net);
 			System.setOut(stdout);											//clear output.txt
 		}else {
-			File newPath = new File("C:\\Users\\Elijah\\git\\SnapBuddies\\SnapBuddies\\src\\all_new.txt");
-			net.reset(outPath);
-			net.init(newPath);
+			System.setOut(new PrintStream("C:\\Users\\Elijah\\git\\SnapBuddies\\SnapBuddies\\src\\all_new.txt"));
+			net.reset(path);												//Adds Pledges and Brothers to the network
+			net.pairAll();
 			printAllPairs(net);
 			System.setOut(stdout);											//clear output.txt
 		}
